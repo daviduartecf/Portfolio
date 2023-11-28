@@ -1,6 +1,4 @@
-# Portfolio
-
-Django Project - Ecommerce Website
+# Django Project - Ecommerce Website
 
 Getting started
 
