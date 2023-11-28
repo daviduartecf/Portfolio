@@ -1,0 +1,163 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <script>
+        const csrftoken = getToken('csrftoken');
+    </script>
+
+    <nav class="navbar justify-content-center">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/search/?search_str=M">Men</a></li>
+            <li><a href="/search/?search_str=W">Woman</a></li>
+            <li><a href="/search/?search_str=K">Kids</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+    <p class="offers">Special offers</p>
+
+  <div class="discount-products-box">
+    <button class="scroll-button left">←</button>
+    <div class="products-container">
+        {% for products in discount %}
+        <a href="{% url 'productview' product_name=products.product.name|urlize %}" style="text-decoration: none;">
+        <div class="disc-product">
+            <img class="thumbnail" src="{{products.product.imageURL}}"> 
+            <div class="discount-product">
+                <h6><strong> {{products.product.name}} </strong></h6>
+                <strong style="text-decoration: line-through; color: red;">{{ products.original_price }}</strong>
+                <strong> {{products.discount_price}}€ </strong>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    <button class="scroll-button right">→</button>
+  </div>
+
+  <section class="brand-logos">
+    <a href="/search/?search_str=nike"><img src="{% static 'images/nike-logo.png' %}" alt="Brand 1"></a>
+    <a href="/search/?search_str=adidas"><img src="{% static 'images/adidas-logo.png' %}" alt="Brand 2"></a>
+    <a href="/search/?search_str=puma"><img src="{% static 'images/puma-logo.png' %}" alt="Brand 3"></a>
+    <a href="/search/?search_str=asics"><img src="{% static 'images/asics-logo.png' %}" alt="Brand 3"></a>
+    <!-- Add more brand logos with their respective links -->
+  </section>
+
+  
+
+  <div class="search-container">
+    <form id="product-search-form" action="/search/" method="get">
+        <input type="text" id="search-input" name="search_str" placeholder="Search for products..." value="{{ search_str }}">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </form>
+  </div>
+
+<div class="sales-window">
+<div class="row">
+    
+        {% for product in products %}
+        <div class="col-lg-4">
+            <div class="box-element product">
+                <img class="thumbnail" src="{{product.imageURL}}">
+                <div class="product-description">
+                    <div class="product-header">
+                        <h6><strong> {{product.name}} </strong></h6>
+                        <hr>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-buttons">
+                            {% csrf_token %}
+                            <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                            <a class="btn btn-outline-success" href="{% url 'productview' product_name=product.name|urlize %}">View</a>
+                        </div>
+                        {% with product_discount=product.discountproduct_set.first %}
+                            <h4>
+                                {% if product_discount %}
+                                    <strong style="color: red;">{{ product_discount.discount_price|floatformat:2 }}€</strong>
+                                {% else %}
+                                    <strong>{{ product.price|floatformat:2 }}€</strong>
+                                {% endif %}
+                            </h4>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    
+</div>
+</div>
+
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const productsContainer = document.querySelector('.products-container');
+    const scrollLeftButton = document.querySelector('.scroll-button.left');
+    const scrollRightButton = document.querySelector('.scroll-button.right');
+    const scrollAmount = 10; // Adjust this value for the desired scroll speed
+
+    scrollLeftButton.style.display = 'none'; // Initially hide the left-scroll button
+
+    function animateScroll(scrollTo) {
+        const currentScroll = productsContainer.scrollLeft;
+        const difference = scrollTo - currentScroll;
+        const step = Math.sign(difference) * scrollAmount;
+
+        function scrollStep() {
+            if ((step > 0 && productsContainer.scrollLeft >= scrollTo) || (step < 0 && productsContainer.scrollLeft <= scrollTo)) {
+                productsContainer.scrollLeft = scrollTo;
+            } else {
+                productsContainer.scrollLeft += step;
+                requestAnimationFrame(scrollStep);
+            }
+        }
+
+        scrollStep();
+    }
+
+    function updateScrollButtons() {
+        if (productsContainer.scrollLeft > 0) {
+            scrollLeftButton.style.display = 'block';
+        } else {
+            scrollLeftButton.style.display = 'none';
+        }
+
+        const containerWidth = productsContainer.clientWidth;
+        const maxScroll = productsContainer.scrollWidth - containerWidth;
+
+        if (productsContainer.scrollLeft < maxScroll) {
+            scrollRightButton.style.display = 'block';
+        } else {
+            scrollRightButton.style.display = 'none';
+        }
+    }
+
+    productsContainer.addEventListener('scroll', () => {
+        updateScrollButtons();
+    });
+
+    scrollLeftButton.addEventListener('click', () => {
+        const scrollTo = Math.max(productsContainer.scrollLeft - 255, 0);
+        animateScroll(scrollTo);
+        updateScrollButtons();
+    });
+
+    scrollRightButton.addEventListener('click', () => {
+        const containerWidth = productsContainer.clientWidth;
+        const maxScroll = productsContainer.scrollWidth - containerWidth;
+        const scrollTo = Math.min(productsContainer.scrollLeft + 260, maxScroll);
+        animateScroll(scrollTo);
+        updateScrollButtons();
+    });
+
+    // Initial button display
+    updateScrollButtons();
+});
+
+</script>
+
+{% endblock content %}

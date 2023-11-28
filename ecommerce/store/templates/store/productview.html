@@ -1,0 +1,128 @@
+{% extends 'store/templa.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="body3">
+        <div class="show_product">
+                <div>
+                    <p>{{ product.name }}</p>
+                </div>
+
+            <img class="img_thumbnail" src="{{product.imageURL}}">
+        </div>
+
+        <div class="show_details">
+
+            <div class="show_thumbnail">
+                <p>{{ product.name }}</p>
+            </div>
+            
+            <div class="prices">
+            {% with product_discount=product.discountproduct_set.first %}
+                {% if product_discount %}
+                    <strong class="price_discount">{{ product_discount.discount_price|floatformat:2 }}€</strong>
+                    <p class="old_price">{{ product.price|floatformat:2 }}€</p>
+                {% else %}
+                    <strong class="original_price">{{ product.price|floatformat:2 }}€</strong>
+                {% endif %}
+            {% endwith %}
+            <br>
+            <br>
+            </div>
+
+            <div class="col-xs-12 sizeselect">
+                <div class="divSize" data-prompt="Selecione" data-outofstocktext="Está esgotado">
+                    <p> Size :</p>
+                </div>
+                <div class="sizes">
+                    <ul class="row sizebuttons" data-clicktoselecttext="Click to select">
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="36">
+                                36
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="37">
+                                37
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="38">
+                                38
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="36">
+                                39
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="37">
+                                40
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-secondary size-button" data-size="38">
+                                41
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="divQty">
+                    <p> Quantity :</p>
+                    <div class="qtypurchase">
+                        <button class="quantity-control" data-product="{{ product.id }}" data-action="remove">-</button>
+                            <div class="quantity-value" id="quantity-value"> {{ initial_quantity }} </div>
+                        <button class="quantity-control" data-product="{{ product.id }}" data-action="add">+</button>
+                    </div>
+                </div>
+            </div> 
+
+            <div>
+                <button data-product="{{ product.id }}" data-action="add" id="add-qty" class="btn btn-outline-secondary add-btn update-cart">
+                <span>Add to Cart</span>
+                <img src="{% static 'images/cart.png' %}" alt="Cart" id="cart-icon">
+                </button>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        window.addEventListener('load', function () {
+            var quantityValue = getCookiex('quantity') || {{ initial_quantity|default:1 }};
+            
+            document.getElementById('quantity-value').innerText = quantityValue;
+
+            document.querySelector('.quantity-control[data-action="remove"]').addEventListener('click', function () {
+                if (quantityValue > 1) {
+                    quantityValue--;
+                    document.getElementById('quantity-value').innerText = quantityValue;
+                    setCookiex('quantity', quantityValue);
+                }
+            });
+
+            document.querySelector('.quantity-control[data-action="add"]').addEventListener('click', function () {
+                quantityValue++;
+                document.getElementById('quantity-value').innerText = quantityValue;
+                setCookiex('quantity', quantityValue);
+            });
+
+            // Function to set a cookie
+            function setCookiex(name, value) {
+                document.cookie = name + '=' + value + ';path=/';
+            }
+
+            // Function to get a cookie value
+            function getCookiex(name) {
+                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                if (match) {
+                    return match[2];
+                }
+                return null;
+            }
+        });
+    </script>
+
+{% endblock content %}
