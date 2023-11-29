@@ -1,0 +1,72 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<nav class="navbar justify-content-center">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search/?search_str=M">Men</a></li>
+        <li><a href="/search/?search_str=W">Woman</a></li>
+        <li><a href="/search/?search_str=K">Kids</a></li>
+    </ul>
+</nav>
+
+<div class="search-container">
+    <form id="product-search-form" action="/search/" method="get">
+        <input type="text" id="search-input" name="search_str" placeholder="Search for products..." value="{{ search_str }}">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </form>
+  </div>
+
+<div class="sales-window">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {% if message.message == "No products found." %}
+                    <div class="alert">
+                        <h1>{{ message }}</h1>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <br>
+    {% endif %}
+    
+<div class="row">
+    
+        {% for product in products %}
+        <div class="col-lg-4">
+            <div class="box-element product">
+                <img class="thumbnail" src="{{product.imageURL}}">
+                <div class="product-description">
+                    <div class="product-header">
+                        <h6><strong> {{product.name}} </strong></h6>
+                        <hr>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-buttons">
+                            {% csrf_token %}
+                            <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                            <a class="btn btn-outline-success" href="{% url 'productview' product_name=product.name|urlize %}">View</a>
+                        </div>
+                        {% with product_discount=product.discountproduct_set.first %}
+                            <h4>
+                                {% if product_discount %}
+                                    <strong style="color: red;">{{ product_discount.discount_price|floatformat:2 }}€</strong>
+                                {% else %}
+                                    <strong>{{ product.price|floatformat:2 }}€</strong>
+                                {% endif %}
+                            </h4>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    
+</div>
+</div>
+
+
+{% endblock content %}
