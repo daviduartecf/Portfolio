@@ -29,23 +29,28 @@ To run this project locally, follow these steps:
         ```bash
         source venv/bin/activate
         ```
+4. **Install requirements:**
 
-4. **Run migrations:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+    
+5. **Run migrations:**
 
     ```bash
     python manage.py migrate
     ```
 
-5. **Create a superuser (optional):**
+6. **Create a superuser (optional):**
 
     ```bash
     python manage.py createsuperuser
     ```
 
-6. **Run the development server:**
+7. **Run the development server:**
 
     ```bash
     python manage.py runserver
     ```
 
-7. Open your browser and go to [http://localhost:8000/](http://localhost:8000/) to see the app.
+8. Open your browser and go to [http://localhost:8000/](http://localhost:8000/) to see the app.
