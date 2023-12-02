@@ -45,6 +45,7 @@ def signout (request):
 def register(request):
     #Retrieve data using getData function
     context = getData(request)
+    cartItems = context['cartItems']
     
     #Handle request via GET
     if request.method == "GET":
