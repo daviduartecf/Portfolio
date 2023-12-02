@@ -15,7 +15,7 @@
     </nav>
 
     <div class="container">
-
+    {% if discount %}
     <p class="offers">Special offers</p>
 
   <div class="discount-products-box">
@@ -36,6 +36,7 @@
     </div>
     <button class="scroll-button right">→</button>
   </div>
+  {% endif %}
 
   <section class="brand-logos">
     <a href="/search/?search_str=nike"><img src="{% static 'images/nike-logo.png' %}" alt="Brand 1"></a>
