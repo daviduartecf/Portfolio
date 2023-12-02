@@ -1,0 +1,68 @@
+{% extends 'store/templa.html' %}
+{% load static %}
+{% block content %}
+
+
+        <div class="body2">
+            <div class="contain-cart">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box-element cart">
+                            <a style="float: left; margin: 5px" class="btn btn-outline-dark" href="/">&#x2190; Continue Shopping</a>
+                            <br>
+                            <br>
+                            <hr>
+
+                            <table class="table">
+                                <tr>
+                                    <th><h5>Items: <strong>{{ order.qnt_total }}</strong></h5></th>
+                                    <th><h5>Total: <strong>{{ order.cartTotal|floatformat:2 }}€</strong></h5></th>
+                                    <th>
+                                        <a style="float: right; margin: 5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="box-element cart">
+                            <table class="table table-bordered total">
+                                <thead>
+                                <tr>
+                                    <th> </th>
+                                    <th>  Item </th>
+                                    <th>  Price </th>
+                                    <th>  Quantity </th>
+                                    <th>  Total </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- You can add rows with data here -->
+                                    {% for item in items %}
+                                    <tr class="tablehover">
+                                        <td style="width : 300px;"><img id="img-checkout" src="{{ item.product.imageURL }}" alt="Product Image"></td>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        <td class="quantity">
+                                            <div class="quantity2">
+                                                <div class="quantity-value">{{item.quantity}}</div>
+                                                <div class="quantity-controls">
+                                                        <img class="chg-quantity update-cart" data-product="{{ item.product.id }}" data-action="add" src="{% static 'images/arrow-up.png' %}">
+                                                        <img class="chg-quantity update-cart" data-product="{{ item.product.id }}" data-action="remove" src="{% static 'images/arrow-down.png' %}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ item.get_total|floatformat:2 }}€</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                </div>
+
+            </div>
+        </div>
+        <br> 
+
+        {% endblock content %}
+      

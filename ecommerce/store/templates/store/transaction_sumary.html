@@ -1,0 +1,31 @@
+{% extends 'store/templa.html' %}
+{% load static %}
+{% block content %}
+<div class="body4">
+    <div id="order-confirmation" class="box-element transactionsumary">
+        <h3>Congratulations! Your transaction is complete.</h3>
+        <hr>
+        <h4>Order Summary:</h4>
+        {% for item in order.orderitem_set.all %}
+            <!-- Use order.orderitem_set.all to get all items associated with the order -->
+            <div class="cart-row">
+                <div style="flex:2"><img class="row-image" src="{{ item.product.imageURL }}"></div>
+                <div style="flex:2; text-align: left;"><p>{{ item.product.name }}</p></div>
+                <div style="flex:1"><p>{{ item.get_total|floatformat:2 }}€</p></div>
+                <div style="flex:1"><p>{{ item.quantity }}</p></div>
+            </div>
+            <hr>
+        {% endfor %}
+        <hr>
+        <h5>Items: {{ order.qnt_total }}</h5>
+        <h5>Total: {{ order.cartTotal|floatformat:2 }}€</h5>
+        <hr>
+        <h4>Shipping Information:</h4>
+        <p>Address: {{ shippingInfo.address }}</p>
+        <p>City: {{ shippingInfo.city }}</p>
+        <p>State: {{ shippingInfo.state }}</p>
+        <p>Zip Code: {{ shippingInfo.zipcode }}</p>
+    </div>
+</div>
+
+{% endblock content %}
