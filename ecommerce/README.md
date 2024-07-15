@@ -1,3 +1,10 @@
+<p align="center">
+<h1 align="center">Ecommerce Website</h1> 
+</p>
+<p align="center">
+  <img src="https://github.com/daviduartecf/Portfolio/blob/main/ecommerce/static/images/homepage.JPG" alt="Homepage">
+</p>
+
 ## Getting Started
 
 To run this project locally, follow these steps:
